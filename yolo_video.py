@@ -71,6 +71,7 @@ def drawDetectionBoxes(idxs, boxes, classIDs, confidences, frame):
 			# extract the bounding box coordinates
 			(x, y) = (boxes[i][0], boxes[i][1])
 			(w, h) = (boxes[i][2], boxes[i][3])
+			# print (x,y,w,h)
 
 			# draw a bounding box rectangle and label on the frame
 			color = [int(c) for c in COLORS[classIDs[i]]]
@@ -159,6 +160,39 @@ def count_vehicles(idxs, boxes, classIDs, vehicle_count, previous_frame_detectio
 
 	return vehicle_count, current_detections
 
+def draw_lot(img, coord):
+	for i in range (len(coord)-1):
+		cv2.line(img, coord[i], coord[i+1], (255, 0, 0), 5) # (start x,y) , (end x,y)
+		cv2.putText(img, str(i+1), coord[i], cv2.FONT_HERSHEY_SIMPLEX, 1, 
+						(255, 0, 0), 3, cv2.LINE_AA)
+
+		# cv2.line(img, coord[1], coord[2], (255, 0, 0), 5)
+		# cv2.putText(img, '2', (x2, y2), cv2.FONT_HERSHEY_SIMPLEX, 1, 
+		# 				(255, 0, 0), 3, cv2.LINE_AA)
+
+		# cv2.line(img, coord[2], coord[3], (255, 0, 0), 5)
+		# cv2.putText(img, '3', (x3, y3), cv2.FONT_HERSHEY_SIMPLEX, 1, 
+		# 				(255, 0, 0), 3, cv2.LINE_AA)
+
+	cv2.line(img, coord[-1], coord[0], (255, 0, 0), 5)
+	cv2.putText(img, str(len(coord)), coord[-1], cv2.FONT_HERSHEY_SIMPLEX, 1, 
+					(255, 0, 0), 3, cv2.LINE_AA)
+
+	# cv2.line(img, (x1_line, y1_line), (x2_line, y2_line), (0,255,0), 10)
+
+def pos_angle(num_frames):
+	pos = -1
+	angle = -1
+	if num_frames >= 240 and num_frames <= 540:
+		pos = 0
+		angle = 0
+	if num_frames >= 630 and num_frames <= 840:
+		pos = 0
+		angle = 1
+
+	print("in function pos:", pos, angle)	
+	return pos, angle
+
 # load our YOLO object detector trained on COCO dataset (80 classes)
 # and determine only the *output* layer names that we need from YOLO
 print("[INFO] loading YOLO from disk...")
@@ -188,10 +222,13 @@ y2_line = video_height//2
 previous_frame_detections = [{(0,0):0} for i in range(FRAMES_BEFORE_CURRENT)]
 # previous_frame_detections = [spatial.KDTree([(0,0)])]*FRAMES_BEFORE_CURRENT # Initializing all trees
 num_frames, vehicle_count = 0, 0
+tot_num_frame = 0
 writer = initializeVideoWriter(video_width, video_height, videoStream)
 start_time = int(time.time())
 # loop over frames from the video file stream
 while True:
+	tot_num_frame += 1
+	print ("tot_frame: ", tot_num_frame)
 	print("================NEW FRAME================")
 	num_frames+= 1
 	print("FRAME:\t", num_frames)
@@ -268,6 +305,36 @@ while True:
 
 	# Draw detection box 
 	drawDetectionBoxes(idxs, boxes, classIDs, confidences, frame)
+	
+	# draw parking lot boxes
+	pos, angle = pos_angle(tot_num_frame)
+	print ("pos, angle:", pos, angle)
+	if pos == 0 and angle == 0:
+		x1, y1 = 305, 665	
+		x2, y2 = 520, 405
+		coord = [(x1,y1),(x2,y2)]
+		draw_lot(frame, coord)
+
+		x1, y1 = 520, 405	
+		x2, y2 = 695, 210
+		coord = [(x1,y1),(x2,y2)]
+		draw_lot(frame, coord)
+
+	elif pos == 0 and angle == 1: 
+		# pos 0 angle 1
+		x1, y1 = 510, 420	# x1, y1 = 885, 635
+		x2, y2 = 670, 235	# x2, y2 = 1050, 440
+		x3, y3 = 450, 200	# x3, y3 = 815, 415
+		x4, y4 = 265, 375	# x4, y4 = 620, 590
+		coord = [(x1,y1),(x2,y2),(x3,y3),(x4,y4)]
+		draw_lot(frame, coord)
+		
+		x1, y1 = 900, 470 	# x1, y1 = 1280, 680
+		x2, y2 = 920, 250	# x2, y2 = 1300, 450
+		x3, y3 = 670, 235	# x3, y3 = 1050, 440
+		x4, y4 = 510, 420	# x4, y4 = 885, 635
+		coord = [(x1,y1),(x2,y2),(x3,y3),(x4,y4)]
+		draw_lot(frame, coord)
 
 	vehicle_count, current_detections = count_vehicles(idxs, boxes, classIDs, vehicle_count, previous_frame_detections, frame)
 
