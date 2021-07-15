@@ -3,4 +3,7 @@
 *.mov
 *.avi
 *.weights
+*.jpg
+*.jpeg
+*.png
 __pycache__/**
