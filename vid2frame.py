@@ -1,8 +1,8 @@
 import cv2
 import os
 
-videoStream = cv2.VideoCapture("C:/Users/roborn/Documents/Yolo-Vehicle-Counter/first-cut.mp4")
-save_path = "C:/Users/roborn/Documents/Yolo-Vehicle-Counter/clip1/"
+videoStream = cv2.VideoCapture("C:/Users/roborn/Documents/Yolo-Vehicle-Counter/second-cut_Trim.mp4")
+save_path = "C:/Users/roborn/Documents/Yolo-Vehicle-Counter/clip2/"
 
 counter = 0
 
