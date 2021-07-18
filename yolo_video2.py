@@ -76,7 +76,7 @@ def drawDetectionBoxes(idxs, boxes, classIDs, confidences, frame, pos, angle):
 
 			# draw a bounding box rectangle and label on the frame
 			if w*h >= 35000: #only show relavent cars
-				if (pos == 0 and angle == 0) and centre[0] > 350:
+				if (pos == 0 and angle == 0) and centre[0] > 350 and centre[1] > 250:
 					color = (0, 0, 255)
 				elif (pos == 1 and angle == 1) and centre[0] > 398 and centre[0] < 760:
 					color = (0, 0, 255)
@@ -293,7 +293,7 @@ def pos_angle(num_frames):
 	if num_frames >= 30*(60+4) and num_frames <= 30*(60+7):
 		pos =  1
 		angle = 0
-	if num_frames >= 30*(60+14) and num_frames <= 30*(60+21):
+	if num_frames >= 30*(60+14) and num_frames <= 30*(60+19)+15:
 		pos = 1
 		angle = 1
 
