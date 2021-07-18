@@ -248,6 +248,7 @@ def draw_lot(frame, pos, angle):
 		cv2.line(frame, p5, p3, line_color, 3)
 		cv2.line(frame, p7, p9, line_color, 3)
 		cv2.line(frame, p6, p8, line_color, 3)
+		cv2.line(frame, p9, p8, line_color, 3)
 	
 	elif pos == 1 and angle == 1:
 		p1 = (285, 300)
