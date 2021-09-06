@@ -73,6 +73,7 @@ python3 yolo_video.py --input inputVideos/highway.mp4 --output outputVideos/high
 * Using GPU
 ```
 python3 yolo_video.py --input inputVideos/highway.mp4 --output outputVideos/highwayOut.avi --yolo yolo-coco --use-gpu 1
+python yolo_video.py --input second-cut_Trim.mp4 --output 0.avi --yolo yolo-coco --use-gpu 1
 ```
 
 ## Implementation details
